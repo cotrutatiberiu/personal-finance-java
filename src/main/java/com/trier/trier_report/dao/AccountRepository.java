@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Page<Account> findAllByUserId(Long userId, Pageable pageable);
     Optional<Account> findByIdAndUserId(Long userId, Long accountId);
+    boolean existsByUserIdAndNameIgnoreCase(Long userId, String name);
 }

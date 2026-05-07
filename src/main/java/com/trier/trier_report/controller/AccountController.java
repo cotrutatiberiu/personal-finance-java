@@ -33,8 +33,7 @@ public class AccountController {
     }
 
     @PatchMapping("/{id}/archive")
-    public ResponseEntity<Void> archive(@PathVariable Long id, @Valid @RequestBody AccountArchiveRequest request) {
-        accountService.archive(id, request);
-        return ResponseEntity.status(200).build();
+    public ResponseEntity<AccountResponse> archive(@PathVariable Long id, @Valid @RequestBody AccountArchiveRequest request) {
+        return ResponseEntity.ok(accountService.archive(id, request));
     }
 }

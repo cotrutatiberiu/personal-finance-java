@@ -8,5 +8,5 @@ import com.trier.trier_report.dto.AccountCreateRequest;
 public interface AccountService {
     void create(AccountCreateRequest payload);
     AccountResponse update(AccountUpdateRequest payload);
-    void archive(Long id, AccountArchiveRequest payload);
+    AccountResponse archive(Long id, AccountArchiveRequest payload);
 }

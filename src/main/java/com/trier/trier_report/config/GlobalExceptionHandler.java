@@ -1,6 +1,7 @@
 package com.trier.trier_report.config;
 
 import com.trier.trier_report.dto.ApiError;
+import com.trier.trier_report.exception.DuplicateResourceException;
 import com.trier.trier_report.exception.EmailUsedException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -31,8 +32,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ApiError> handleBadCredentials(EntityNotFoundException ex, WebRequest request) {
+    public ResponseEntity<ApiError> handleException(EntityNotFoundException ex, WebRequest request) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ApiError> handleException(DuplicateResourceException ex, WebRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
     // Default

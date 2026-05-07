@@ -4,6 +4,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record AccountArchiveRequest(
         @NotNull
-        boolean archived
+        Boolean archived
 ) {
 }

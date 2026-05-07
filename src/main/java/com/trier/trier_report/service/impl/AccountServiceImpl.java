@@ -6,6 +6,7 @@ import com.trier.trier_report.dto.AccountResponse;
 import com.trier.trier_report.dto.AccountUpdateRequest;
 import com.trier.trier_report.dto.AccountCreateRequest;
 import com.trier.trier_report.entity.Account;
+import com.trier.trier_report.exception.DuplicateResourceException;
 import com.trier.trier_report.mapper.AccountMapper;
 import com.trier.trier_report.service.AccountService;
 import jakarta.persistence.EntityNotFoundException;
@@ -34,23 +35,28 @@ public class AccountServiceImpl implements AccountService {
     public AccountResponse update(AccountUpdateRequest payload) {
         Account account = accountRepository.findById(payload.id()).orElseThrow(() -> new EntityNotFoundException("Account not found with ID " + payload.id()));
 
-        if (payload.currencyId() != null) {
-            account.setCurrencyId(payload.currencyId());
-        }
+        if (!payload.name().equalsIgnoreCase(account.getName())) {
+            if (accountRepository.existsByUserIdAndNameIgnoreCase(account.getUserId(), payload.name())) {
+                throw new DuplicateResourceException("Duplicate account name");
+            }
 
-        if (payload.name() != null && !payload.name().equals(account.getName())) {
             account.setName(payload.name());
         }
+
+        if (!payload.currencyId().equals(account.getCurrencyId()))
+            account.setCurrencyId(payload.currencyId());
 
         return AccountMapper.toDto(account);
     }
 
     @Override
     @Transactional
-    public void archive(Long id, AccountArchiveRequest payload) {
+    public AccountResponse archive(Long id, AccountArchiveRequest payload) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Account not found with ID " + id));
 
-        account.setArchived(payload.archived());
-        accountRepository.save(account);
+        if (account.isArchived() != payload.archived())
+            account.setArchived(payload.archived());
+
+        return AccountMapper.toDto(account);
     }
 }

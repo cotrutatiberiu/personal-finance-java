@@ -40,7 +40,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AccountResponse findAccountByUserId(Long userId, Long accountId) {
-        Account account = accountRepository.findByIdAndUserId(userId, accountId).orElseThrow(() -> new EntityNotFoundException("Account not found: " + accountId));
+        Account account = accountRepository.findByIdAndUserId(userId, accountId)
+                .orElseThrow(() -> new EntityNotFoundException("Account not found: " + accountId));
 
         return AccountMapper.toDto(account);
     }
