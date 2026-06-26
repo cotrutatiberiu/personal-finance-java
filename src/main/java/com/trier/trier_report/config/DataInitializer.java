@@ -1,11 +1,10 @@
 package com.trier.trier_report.config;
 
+import com.trier.trier_report.dao.AccountTypeRepository;
 import com.trier.trier_report.dao.CurrencyRepository;
 import com.trier.trier_report.dao.RoleRepository;
 import com.trier.trier_report.dao.UserRepository;
-import com.trier.trier_report.entity.Currency;
-import com.trier.trier_report.entity.Role;
-import com.trier.trier_report.entity.User;
+import com.trier.trier_report.entity.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,16 +17,21 @@ import java.util.Optional;
 @EnableWebSecurity
 public class DataInitializer {
     @Bean
-    CommandLineRunner initDatabase(RoleRepository roleRepository, UserRepository userRepository, CurrencyRepository currencyRepository, PasswordEncoder encoder) {
+    CommandLineRunner initDatabase(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder encoder, AccountTypeRepository accountTypeRepository, CurrencyRepository currencyRepository) {
         return args -> {
-            Optional<Role> userRole = roleRepository.findByName("USER");
-            Role role = userRole.orElse(null);
+            Role role = roleRepository.findByName("USER").orElseThrow(() -> new RuntimeException("Role not found"));
             Optional<User> u = userRepository.findByEmail("test@email.com");
-            if (userRole.isPresent() && u.isEmpty()) {
+
+            if (u.isEmpty()) {
+
                 User user = new User("testFirstname", "testLastname", "test@email.com", encoder.encode("testPassword1234"), role.getId());
 
-                userRepository.save(user);
+                User savedUser = userRepository.save(user);
                 System.out.println("User initialized.");
+
+                AccountType accountType = accountTypeRepository.findByName("BANK").orElseThrow(() -> new RuntimeException("Account type not found"));
+                Currency currency = currencyRepository.findByName("EUR").orElseThrow(() -> new RuntimeException("Currency not found"));
+                Account account = new Account(savedUser.getId(), accountType.getId(), currency.getId(), "First account");
             }
         };
     }

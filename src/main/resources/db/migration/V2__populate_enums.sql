@@ -3,7 +3,7 @@ VALUES ('USER');
 
 INSERT INTO tr.currencies(name)
 VALUES ('EUR'),
-       ('DOL'),
+       ('USD'),
        ('RON');
 
 INSERT INTO tr.account_types(name)
