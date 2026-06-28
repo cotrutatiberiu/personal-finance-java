@@ -53,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String accessToken = jwtUtil.getAccessTokenFromRequest(request);
+        System.out.println(accessToken);
 
         // No token? just continue
         if (accessToken == null) {

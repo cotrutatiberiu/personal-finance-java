@@ -1,13 +1,16 @@
 INSERT INTO tr.roles(name)
-VALUES ('USER');
+VALUES ('USER')
+ON CONFLICT DO NOTHING;
 
 INSERT INTO tr.currencies(name)
 VALUES ('EUR'),
        ('USD'),
-       ('RON');
+       ('RON')
+ON CONFLICT (lower(name)) DO NOTHING;
 
 INSERT INTO tr.account_types(name)
 VALUES ('CASH'),
        ('CARD'),
        ('BANK'),
-       ('SAVINGS');
+       ('SAVINGS')
+ON CONFLICT DO NOTHING;

@@ -22,10 +22,20 @@ public class CategoryServiceImpl implements CategoryService {
     public void create(CategoryCreateRequest categoryCreateRequest) {
         Category category = CategoryMapper.toEntity(categoryCreateRequest);
 
-        if (categoryRepository.existsByUserIdAndNameIgnoreCase(category.getUserId(), category.getName())) {
-            throw new DuplicateResourceException("Duplicate category name");
+        // Parent category
+        if (category.getParentCategoryId() == null) {
+            if (categoryRepository.existsByUserIdAndNameIgnoreCase(category.getUserId(), category.getName())) {
+                throw new DuplicateResourceException("Duplicate category");
+            }
+            categoryRepository.save(category);
         }
-
-        categoryRepository.save(category);
+        // Subcategory
+//        else {
+//            if(categoryRepository.)
+//            if (categoryRepository.existsByUserIdAndParentCategoryIdAndNameIgnoreCase(category.getUserId(), category.getParentCategoryId(), category.getName())) {
+//                throw new DuplicateResourceException("Duplicate subcategory");
+//            }
+//            categoryRepository.save(category);
+//        }
     }
 }

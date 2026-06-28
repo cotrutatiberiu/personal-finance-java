@@ -29,8 +29,8 @@ public class SecurityConfig {
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName("_csrf");
 
-        String[] ignorePaths = {"/api/auth/**", "/api/accounts/**", "/api/users/**", "/api/categories/**"};
-
+        //  String[] ignorePaths = {"/api/auth/**", "/api/accounts/**", "/api/users/**", "/api/categories/**"};
+        String[] ignorePaths = {"/api/auth/**"};
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf
