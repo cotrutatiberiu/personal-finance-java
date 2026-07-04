@@ -1,5 +1,6 @@
 package com.trier.trier_report.entity;
 
+import com.trier.trier_report.entity.base.Ownable;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -10,7 +11,7 @@ import java.time.Instant;
 @Entity
 @Table(name="categories",schema = "tr")
 @EntityListeners(AuditingEntityListener.class)
-public class Category {
+public class Category implements Ownable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

@@ -1,5 +1,6 @@
 package com.trier.trier_report.controller;
 
+import com.trier.trier_report.entity.CustomUserDetails;
 import com.trier.trier_report.service.AuthService;
 import com.trier.trier_report.util.JwtUtil;
 import com.trier.trier_report.dto.*;
@@ -10,6 +11,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -57,7 +60,23 @@ public class AuthController {
 
     @GetMapping("/authenticated")
     public ResponseEntity<String> isAuthenticated() {
+        System.out.println();
         return ResponseEntity.ok(authService.isAuthenticated());
+    }
+
+    @GetMapping("/debug")
+    public ResponseEntity<String> debugUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.getPrincipal() instanceof CustomUserDetails userDetails) {
+            Long userId = userDetails.getId();
+            String userEmail = userDetails.getUsername();
+
+            System.out.println("DEBUG: Current Logged-in User ID is: " + userId);
+            return ResponseEntity.ok("User ID is: " + userId + ", email: " + userEmail);
+        }
+
+        return ResponseEntity.status(401).body("No authenticated user found");
     }
 
     @PostMapping("/logout")

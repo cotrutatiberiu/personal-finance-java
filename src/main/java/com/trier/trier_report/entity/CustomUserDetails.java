@@ -17,6 +17,10 @@ public class CustomUserDetails implements UserDetails {
         return null;
     }
 
+    public Long getId() {
+        return this.user.getId();
+    }
+
     @Override
     public String getPassword() {
         return this.user.getPassword();
