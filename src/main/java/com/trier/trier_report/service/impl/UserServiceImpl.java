@@ -31,7 +31,12 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("User not found: " + userId);
         }
 
-        Pageable pageable = PageRequest.of(request.pageNumber(), request.pageSize(), Sort.by(request.sortBy().getField()).ascending());
+        int pageNum = Math.max(0, request.pageNumber() - 1);
+        int pageSize = request.pageSize();
+
+        Sort sort = Sort.by(request.sortBy().getField()).ascending();
+
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
 
         Page<Account> accounts = accountRepository.findAllByUserId(userId, pageable);
 

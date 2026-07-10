@@ -9,7 +9,7 @@ public class CategoryMapper {
         return new Category(payload.userId(), payload.parentCategoryId(), payload.name());
     }
 
-    public static CategoryResponse toCategoryResponse(Category category) {
+    public static CategoryResponse toDto(Category category) {
         return new CategoryResponse(category.getId(), category.getUserId(), category.getParentCategoryId(), category.getName(), category.getCreatedAt(), category.getUpdatedAt());
     }
 }

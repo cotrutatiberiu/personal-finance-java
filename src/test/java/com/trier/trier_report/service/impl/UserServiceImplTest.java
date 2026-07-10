@@ -49,8 +49,8 @@ class UserServiceImplTest {
 
         // Assert
         assertNotNull(response);
-        verify(userRepository).existsById(userId);
-        verify(accountRepository).findAllByUserId(eq(userId), any(Pageable.class));
+        verify(userRepository, times(1)).existsById(userId);
+        verify(accountRepository, times(1)).findAllByUserId(eq(userId), any(Pageable.class));
     }
 
     @Test
@@ -67,7 +67,7 @@ class UserServiceImplTest {
         });
 
         // Verify
-        verify(userRepository).existsById(userId);
+        verify(userRepository, times(1)).existsById(userId);
         verifyNoInteractions(accountRepository);
     }
 
@@ -85,7 +85,8 @@ class UserServiceImplTest {
 
         assertNotNull(response);
         assertEquals("BANK", response.name());
-        verify(accountRepository).findByIdAndUserId(userId, accountId);
+
+        verify(accountRepository, times(1)).findByIdAndUserId(userId, accountId);
     }
 
     @Test
@@ -100,6 +101,6 @@ class UserServiceImplTest {
             userService.findAccountByUserId(userId, accountId);
         });
 
-        verify(accountRepository).findByIdAndUserId(userId, accountId);
+        verify(accountRepository, times(1)).findByIdAndUserId(userId, accountId);
     }
 }
