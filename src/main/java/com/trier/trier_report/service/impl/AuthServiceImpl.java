@@ -16,10 +16,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
@@ -33,6 +35,8 @@ public class AuthServiceImpl implements AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
+    @Transactional
     public UserResponse register(UserRegisterRequest request) {
         String encodedPassword = passwordEncoder.encode(request.password());
         User user = UserMapper.toEntity(request, encodedPassword);
@@ -46,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
         return UserMapper.toUserResponse(savedUser);
     }
 
+    @Override
     public String login(UserLoginRequest userLoginRequest) {
         String email = userLoginRequest.email();
         Optional<User> user = userRepository.findByEmail(email.toLowerCase());
@@ -61,6 +66,7 @@ public class AuthServiceImpl implements AuthService {
         return email;
     }
 
+    @Override
     public String isAuthenticated() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

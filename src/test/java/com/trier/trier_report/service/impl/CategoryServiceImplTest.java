@@ -6,7 +6,6 @@ import com.trier.trier_report.dto.CategoryCreateRequest;
 import com.trier.trier_report.dto.CategoryResponse;
 import com.trier.trier_report.entity.Category;
 import com.trier.trier_report.exception.DuplicateResourceException;
-import com.trier.trier_report.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

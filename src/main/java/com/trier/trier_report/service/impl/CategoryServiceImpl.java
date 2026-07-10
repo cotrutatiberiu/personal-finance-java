@@ -11,8 +11,10 @@ import com.trier.trier_report.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
@@ -24,6 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryResponse create(CategoryCreateRequest categoryCreateRequest) {
         Category category = CategoryMapper.toEntity(categoryCreateRequest);
         if (!userRepository.existsById(category.getUserId())) {
@@ -48,3 +51,4 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryMapper.toDto(savedCategory);
     }
 }
+

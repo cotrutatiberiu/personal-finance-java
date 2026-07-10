@@ -15,6 +15,7 @@ public class WeatherServiceImpl implements WeatherService {
         this.weatherClient = weatherClient;
     }
 
+    @Override
     @Cacheable(value = "lon", key = "#lon + ':' + #lat")
     public OpenWeatherResponse getTodayWeatherReport(String lon, String lat) {
         return weatherClient.fetchWeather(lon, lat);

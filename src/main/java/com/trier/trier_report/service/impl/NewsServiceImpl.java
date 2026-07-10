@@ -16,6 +16,7 @@ public class NewsServiceImpl implements NewsService {
         this.newsClient = newsClient;
     }
 
+    @Override
     // Cache by (q, from, sortBy)
     @Cacheable(cacheNames = "news", cacheManager = "newsCacheManager", key = "#q + '|' + #from + '|' + #sortBy")
     public NewsResponse getNews(String q, String from, String sortBy) {
