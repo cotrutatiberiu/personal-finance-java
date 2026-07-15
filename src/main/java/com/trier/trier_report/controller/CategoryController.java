@@ -2,6 +2,7 @@ package com.trier.trier_report.controller;
 
 import com.trier.trier_report.dao.CategoryRepository;
 import com.trier.trier_report.dto.CategoryCreateRequest;
+import com.trier.trier_report.dto.CategoryResponse;
 import com.trier.trier_report.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,9 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("@categorySecurity.isCategoryOwner(#payload, authentication")
-    public ResponseEntity<Void> create(@RequestBody CategoryCreateRequest request) {
-        categoryService.create(request);
+    public ResponseEntity<CategoryResponse> create(@RequestBody CategoryCreateRequest request) {
+        CategoryResponse categoryResponse = categoryService.create(request);
 
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.ok(categoryResponse);
     }
 }

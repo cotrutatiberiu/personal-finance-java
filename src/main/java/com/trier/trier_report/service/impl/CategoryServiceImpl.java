@@ -44,6 +44,9 @@ public class CategoryServiceImpl implements CategoryService {
                 if (categoryRepository.existsByUserIdAndParentCategoryIdAndNameIgnoreCase(category.getUserId(), category.getParentCategoryId(), category.getName())) {
                     throw new DuplicateResourceException("Duplicate subcategory");
                 }
+                if (!categoryRepository.existsByUserIdAndParentCategoryId(category.getUserId(), category.getParentCategoryId())) {
+                    throw new EntityNotFoundException("Category parent not found");
+                }
             }
         }
 
