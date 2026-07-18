@@ -1,9 +1,6 @@
 package com.trier.trier_report.controller;
 
-import com.trier.trier_report.dto.AccountArchiveRequest;
-import com.trier.trier_report.dto.AccountResponse;
-import com.trier.trier_report.dto.AccountUpdateRequest;
-import com.trier.trier_report.dto.AccountCreateRequest;
+import com.trier.trier_report.dto.*;
 import com.trier.trier_report.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

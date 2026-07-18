@@ -1,7 +1,11 @@
 package com.trier.trier_report.dao;
 
 import com.trier.trier_report.entity.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -13,4 +17,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByUserId(Long userId);
 
     boolean existsByUserIdAndParentCategoryId(Long userId, Long parentCategoryId);
+
+    Page<Category> findAllByUserId(Long userId, Pageable pageable);
+
+    @Query(value = "SELECT * FROM categories WHERE user_id = :userId AND parent_category_id IS NULL", nativeQuery = true)
+    Page<Category> findParentCategoriesByUserId(@Param("userId") Long userId, Pageable pageable);
 }

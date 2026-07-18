@@ -18,38 +18,4 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
-    private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
-
-    @Autowired
-    public UserServiceImpl(AccountRepository accountRepository, UserRepository userRepository) {
-        this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
-    }
-
-    @Override
-    public PaginatedResponse<AccountResponse> findAccountsByUserId(Long userId, UserAccountsSearchRequest request) {
-        if (!userRepository.existsById(userId)) {
-            throw new EntityNotFoundException("User not found: " + userId);
-        }
-
-        int pageNum = Math.max(0, request.pageNumber() - 1);
-        int pageSize = request.pageSize();
-
-        Sort sort = Sort.by(request.sortBy().getField()).ascending();
-
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-
-        Page<Account> accounts = accountRepository.findAllByUserId(userId, pageable);
-
-        return PaginationMapper.toDto(accounts, AccountMapper::toDto);
-    }
-
-    @Override
-    public AccountResponse findAccountByUserId(Long userId, Long accountId) {
-        Account account = accountRepository.findByIdAndUserId(userId, accountId)
-                .orElseThrow(() -> new EntityNotFoundException("Account not found: " + accountId));
-
-        return AccountMapper.toDto(account);
-    }
 }

@@ -4,12 +4,19 @@ import com.trier.trier_report.dao.CategoryRepository;
 import com.trier.trier_report.dao.UserRepository;
 import com.trier.trier_report.dto.CategoryCreateRequest;
 import com.trier.trier_report.dto.CategoryResponse;
+import com.trier.trier_report.dto.PaginatedResponse;
+import com.trier.trier_report.dto.UserCategoriesSearchRequest;
 import com.trier.trier_report.entity.Category;
 import com.trier.trier_report.exception.DuplicateResourceException;
 import com.trier.trier_report.mapper.CategoryMapper;
+import com.trier.trier_report.mapper.PaginationMapper;
 import com.trier.trier_report.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +59,24 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category savedCategory = categoryRepository.save(category);
         return CategoryMapper.toDto(savedCategory);
+    }
+
+    @Override
+    public PaginatedResponse<CategoryResponse> findParentCategoriesByUserId(Long userId, UserCategoriesSearchRequest request) {
+        if (!userRepository.existsById(userId)) {
+            throw new EntityNotFoundException("User not found: " + userId);
+        }
+
+        int pageNum = Math.max(0, request.search().pageNumber() - 1);
+        int pageSize = request.search().pageSize();
+
+        Sort sort = Sort.by(request.search().sortBy()).ascending();
+
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+
+        Page<Category> accounts = categoryRepository.findParentCategoriesByUserId(userId, pageable);
+
+        return PaginationMapper.toDto(accounts, CategoryMapper::toDto);
     }
 }
 
