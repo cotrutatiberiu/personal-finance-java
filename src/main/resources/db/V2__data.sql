@@ -1,5 +1,7 @@
 INSERT INTO tr.roles(name)
-VALUES ('USER')
+VALUES ('USER'),
+       ('MODERATOR'),
+       ('ADMIN')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO tr.currencies(name)

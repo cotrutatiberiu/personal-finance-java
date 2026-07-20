@@ -19,16 +19,18 @@ public class DataInitializer implements CommandLineRunner {
     private final AccountTypeRepository accountTypeRepository;
     private final CurrencyRepository currencyRepository;
     private final AccountRepository accountRepository;
+    private final CategoryRepository categoryRepository;
 
     public DataInitializer(RoleRepository roleRepository, UserRepository userRepository,
                            PasswordEncoder encoder, AccountTypeRepository accountTypeRepository,
-                           CurrencyRepository currencyRepository, AccountRepository accountRepository) {
+                           CurrencyRepository currencyRepository, AccountRepository accountRepository, CategoryRepository categoryRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.accountTypeRepository = accountTypeRepository;
         this.currencyRepository = currencyRepository;
         this.accountRepository = accountRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -36,6 +38,10 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Role role = roleRepository.findByName("USER").orElseThrow(() -> new RuntimeException("Role not found"));
         Currency currency = currencyRepository.findByNameIgnoreCase("EUR").orElseThrow(() -> new RuntimeException("Currency not found"));
+
+        String parentCategoryName = "food";
+        String subCategoryName = "restaurants";
+
         Optional<User> u = userRepository.findByEmail("test@email.com");
 
         if (u.isEmpty()) {
@@ -51,6 +57,14 @@ public class DataInitializer implements CommandLineRunner {
             Account account = new Account(savedUser.getId(), accountType.getId(), currency.getId(), "First account");
             accountRepository.save(account);
             System.out.println("Account initialized.");
+
+            Category parentCategory = new Category(savedUser.getId(), null, parentCategoryName);
+            categoryRepository.save(parentCategory);
+
+            Category savedParentCategory = categoryRepository.findByUserId(savedUser.getId()).orElseThrow(() -> new RuntimeException("Category not found"));
+
+            Category subCategory = new Category(savedUser.getId(), savedParentCategory.getId(), subCategoryName);
+            categoryRepository.save(subCategory);
         }
     }
 }

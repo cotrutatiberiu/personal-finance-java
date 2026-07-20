@@ -16,12 +16,22 @@ CREATE TABLE IF NOT EXISTS users
     last_name  VARCHAR(50)                                        NOT NULL,
     email      VARCHAR(255)                                       NOT NULL,
     password   VARCHAR(255)                                       NOT NULL,
-    role_id    BIGINT                                             NOT NULL REFERENCES roles (id),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS uq_users_email ON users (lower(email));
+
+CREATE TABLE IF NOT EXISTS user_roles
+(
+    user_id     BIGINT                                             NOT NULL references users (id),
+    role_id     BIGINT                                             NOT NULL references roles (id),
+    assigned_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+
+    PRIMARY KEY (user_id, role_id),
+    CONSTRAINT fk_user_roles_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_roles_role FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
+);
 
 CREATE TABLE IF NOT EXISTS account_types
 (
