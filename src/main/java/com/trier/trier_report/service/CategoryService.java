@@ -7,5 +7,6 @@ import com.trier.trier_report.dto.UserCategoriesSearchRequest;
 
 public interface CategoryService {
     CategoryResponse create(CategoryCreateRequest categoryCreateRequest);
-    PaginatedResponse<CategoryResponse> findParentCategoriesByUserId(Long userId, UserCategoriesSearchRequest request);
+
+    PaginatedResponse<CategoryResponse> findCategoriesByUserId(Long userId, UserCategoriesSearchRequest request);
 }

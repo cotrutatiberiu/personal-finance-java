@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 
 public record UserCategoriesSearchRequest(
         @Valid
-        Search search
+        Search search,
+        String parentCategoryMame
 ) {
 }

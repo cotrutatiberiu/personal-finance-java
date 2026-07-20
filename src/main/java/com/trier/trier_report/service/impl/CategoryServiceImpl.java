@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
                 if (categoryRepository.existsByUserIdAndParentCategoryIdAndNameIgnoreCase(category.getUserId(), category.getParentCategoryId(), category.getName())) {
                     throw new DuplicateResourceException("Duplicate subcategory");
                 }
-                if (!categoryRepository.existsByUserIdAndParentCategoryId(category.getUserId(), category.getParentCategoryId())) {
+                if (!categoryRepository.existsByUserIdAndId(category.getParentCategoryId(), category.getUserId())) {
                     throw new EntityNotFoundException("Category parent not found");
                 }
             }
@@ -62,10 +62,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public PaginatedResponse<CategoryResponse> findParentCategoriesByUserId(Long userId, UserCategoriesSearchRequest request) {
+    public PaginatedResponse<CategoryResponse> findCategoriesByUserId(Long userId, UserCategoriesSearchRequest request) {
         if (!userRepository.existsById(userId)) {
             throw new EntityNotFoundException("User not found: " + userId);
         }
+        Page<Category> accounts;
 
         int pageNum = Math.max(0, request.search().pageNumber() - 1);
         int pageSize = request.search().pageSize();
@@ -74,7 +75,11 @@ public class CategoryServiceImpl implements CategoryService {
 
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
 
-        Page<Category> accounts = categoryRepository.findParentCategoriesByUserId(userId, pageable);
+        if (request.parentCategoryMame() == null) {
+            accounts = categoryRepository.findParentCategoriesByUserId(userId, pageable);
+        } else {
+            accounts = categoryRepository.findSubCategoriesByUserId(userId, request.parentCategoryMame(), pageable);
+        }
 
         return PaginationMapper.toDto(accounts, CategoryMapper::toDto);
     }

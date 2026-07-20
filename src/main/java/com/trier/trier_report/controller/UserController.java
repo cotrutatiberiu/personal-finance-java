@@ -3,7 +3,6 @@ package com.trier.trier_report.controller;
 import com.trier.trier_report.dto.*;
 import com.trier.trier_report.service.AccountService;
 import com.trier.trier_report.service.CategoryService;
-import com.trier.trier_report.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/categories/search")
-    public ResponseEntity<PaginatedResponse<CategoryResponse>> getUserParentCategories(@PathVariable Long userId, @Valid @RequestBody UserCategoriesSearchRequest request) {
-        return ResponseEntity.ok(categoryService.findParentCategoriesByUserId(userId, request));
+    public ResponseEntity<PaginatedResponse<CategoryResponse>> getUserCategories(@PathVariable Long userId, @Valid @RequestBody UserCategoriesSearchRequest request) {
+        return ResponseEntity.ok(categoryService.findCategoriesByUserId(userId, request));
     }
 }

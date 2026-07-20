@@ -16,10 +16,13 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByUserId(Long userId);
 
-    boolean existsByUserIdAndParentCategoryId(Long userId, Long parentCategoryId);
+    boolean existsByUserIdAndId(Long userId, Long categoryId);
 
     Page<Category> findAllByUserId(Long userId, Pageable pageable);
 
     @Query(value = "SELECT * FROM categories WHERE user_id = :userId AND parent_category_id IS NULL", nativeQuery = true)
     Page<Category> findParentCategoriesByUserId(@Param("userId") Long userId, Pageable pageable);
+
+    @Query(value = "SELECT * FROM categories WHERE user_id = :userId AND parent_category_id =:parentCategoryId", nativeQuery = true)
+    Page<Category> findSubCategoriesByUserId(@Param("userId") Long userId, @Param("parentCategoryId") String parentCategoryId, Pageable pageable);
 }

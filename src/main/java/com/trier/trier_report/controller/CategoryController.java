@@ -1,12 +1,8 @@
 package com.trier.trier_report.controller;
 
-import com.trier.trier_report.dao.CategoryRepository;
 import com.trier.trier_report.dto.CategoryCreateRequest;
 import com.trier.trier_report.dto.CategoryResponse;
-import com.trier.trier_report.dto.PaginatedResponse;
-import com.trier.trier_report.dto.UserCategoriesSearchRequest;
 import com.trier.trier_report.service.CategoryService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
