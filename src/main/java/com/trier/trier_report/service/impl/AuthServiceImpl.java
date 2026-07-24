@@ -5,7 +5,6 @@ import com.trier.trier_report.dto.UserLoginRequest;
 import com.trier.trier_report.dto.UserRegisterRequest;
 import com.trier.trier_report.dto.UserResponse;
 import com.trier.trier_report.entity.User;
-import com.trier.trier_report.exception.EmailUsedException;
 import com.trier.trier_report.mapper.UserMapper;
 import com.trier.trier_report.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +37,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public UserResponse register(UserRegisterRequest request) {
-        String encodedPassword = passwordEncoder.encode(request.password());
-        User user = UserMapper.toEntity(request, encodedPassword);
-
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new EmailUsedException("Email already used");
-        }
+        User user = UserMapper.toEntity(request);
 
         User savedUser = userRepository.save(user);
 

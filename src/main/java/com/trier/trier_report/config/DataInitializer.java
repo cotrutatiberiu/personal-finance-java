@@ -2,6 +2,7 @@ package com.trier.trier_report.config;
 
 import com.trier.trier_report.dao.*;
 import com.trier.trier_report.entity.*;
+import com.trier.trier_report.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.DependsOn;
@@ -15,43 +16,49 @@ import java.util.Optional;
 public class DataInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
-    private final PasswordEncoder encoder;
+    private final UserService userService;
     private final AccountTypeRepository accountTypeRepository;
     private final CurrencyRepository currencyRepository;
     private final AccountRepository accountRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRoleRepository userRoleRepository;
 
-    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository,
+    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository, UserService userService,
                            PasswordEncoder encoder, AccountTypeRepository accountTypeRepository,
-                           CurrencyRepository currencyRepository, AccountRepository accountRepository, CategoryRepository categoryRepository) {
+                           CurrencyRepository currencyRepository, AccountRepository accountRepository, CategoryRepository categoryRepository, UserRoleRepository userRoleRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
-        this.encoder = encoder;
+        this.userService = userService;
         this.accountTypeRepository = accountTypeRepository;
         this.currencyRepository = currencyRepository;
         this.accountRepository = accountRepository;
         this.categoryRepository = categoryRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        Role role = roleRepository.findByName("USER").orElseThrow(() -> new RuntimeException("Role not found"));
+        Role moderatorRole = roleRepository.findByName("MODERATOR").orElseThrow(() -> new RuntimeException("Role not found"));
         Currency currency = currencyRepository.findByNameIgnoreCase("EUR").orElseThrow(() -> new RuntimeException("Currency not found"));
 
+        String firstName = "moderatorFirstname";
+        String lastName = "moderatorLastname";
+        String email = "testModerator@email.com";
+        String password = "moderatorPassword1234";
         String parentCategoryName = "food";
         String subCategoryName = "restaurants";
+        String accountName = "BANK";
 
-        Optional<User> u = userRepository.findByEmail("test@email.com");
+        Optional<User> u = userRepository.findByEmail(email);
 
         if (u.isEmpty()) {
-            User user = new User("testFirstname", "testLastname", "test@email.com",
-                    encoder.encode("testPassword1234"), role.getId());
+            User user = new User(firstName, lastName, email);
 
-            User savedUser = userRepository.save(user);
+            User savedUser = userService.create(user, password);
             System.out.println("User initialized.");
 
-            AccountType accountType = accountTypeRepository.findByName("BANK")
+            AccountType accountType = accountTypeRepository.findByName(accountName)
                     .orElseThrow(() -> new RuntimeException("Account type not found"));
 
             Account account = new Account(savedUser.getId(), accountType.getId(), currency.getId(), "First account");
@@ -65,6 +72,9 @@ public class DataInitializer implements CommandLineRunner {
 
             Category subCategory = new Category(savedUser.getId(), savedParentCategory.getId(), subCategoryName);
             categoryRepository.save(subCategory);
+
+            UserRole userRole = new UserRole(savedUser, moderatorRole);
+            userRoleRepository.save(userRole);
         }
     }
 }

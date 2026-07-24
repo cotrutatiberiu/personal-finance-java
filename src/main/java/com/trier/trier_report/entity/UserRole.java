@@ -2,6 +2,8 @@ package com.trier.trier_report.entity;
 
 import com.trier.trier_report.entity.id.UserRoleId;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.Instant;
 
@@ -20,15 +22,31 @@ public class UserRole {
     @JoinColumn(name = "role_id")
     Role role;
 
-    @Column(name = "assigned_at", nullable = false)
-    private Instant assignedAt;
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        assignedAt = Instant.now();
+        createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now();
     }
 
     protected UserRole() {
+    }
+
+    public UserRole(User user, Role role) {
+        this.user = user;
+        this.role = role;
     }
 
     public User getUser() {
@@ -47,11 +65,15 @@ public class UserRole {
         this.role = role;
     }
 
-    public Instant getAssignedAt() {
-        return assignedAt;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setAssignedAt(Instant assignedAt) {
-        this.assignedAt = assignedAt;
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

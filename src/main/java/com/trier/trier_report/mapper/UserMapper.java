@@ -5,11 +5,11 @@ import com.trier.trier_report.dto.UserResponse;
 import com.trier.trier_report.entity.User;
 
 public class UserMapper {
-    public static User toEntity(UserRegisterRequest payload, String encodedPassword) {
-        return new User(payload.firstName(), payload.lastName(), payload.email(), encodedPassword, payload.roleId());
+    public static User toEntity(UserRegisterRequest payload) {
+        return new User(payload.firstName(), payload.lastName(), payload.email());
     }
 
     public static UserResponse toUserResponse(User user) {
-        return new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRoleId());
+        return new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail());
     }
 }
