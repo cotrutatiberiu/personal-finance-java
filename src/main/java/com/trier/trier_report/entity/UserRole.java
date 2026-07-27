@@ -4,12 +4,14 @@ import com.trier.trier_report.entity.id.UserRoleId;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "user_roles")
 @IdClass(UserRoleId.class)
+@EntityListeners(AuditingEntityListener.class)
 public class UserRole {
 
     @Id
@@ -29,17 +31,6 @@ public class UserRole {
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = Instant.now();
-        updatedAt = Instant.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = Instant.now();
-    }
 
     protected UserRole() {
     }

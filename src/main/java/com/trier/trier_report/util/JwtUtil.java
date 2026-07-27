@@ -1,6 +1,7 @@
 package com.trier.trier_report.util;
 
 import com.trier.trier_report.exception.RefreshTokenExpiredException;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,9 +13,10 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 @Component
-public class JwtUtil {
+public final class JwtUtil {
 
     @Value("${auth.access-secret-token}")
     private String ACCESS_SECRET;
@@ -32,9 +34,11 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(REFRESH_SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateAccessToken(String email) {
+    public String generateAccessToken(String email, List<String> roles) {
+        System.out.println(roles);
         return Jwts.builder()
                 .setSubject(email)
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationSeconds * 1000L))
                 .signWith(getAccessKey(), SignatureAlgorithm.HS256)
@@ -80,13 +84,13 @@ public class JwtUtil {
         return refreshTokenExpirationSeconds;
     }
 
-    public String refreshAccessToken(String cookieRefreshToken) {
+    public String refreshAccessToken(String cookieRefreshToken, List<String> roles) {
         if (cookieRefreshToken == null || cookieRefreshToken.isBlank()) {
             throw new RefreshTokenExpiredException("Missing refresh token");
         }
 
         if (validateRefreshToken(cookieRefreshToken)) {
-            return generateAccessToken(getEmailFromRefreshToken(cookieRefreshToken));
+            return generateAccessToken(getEmailFromRefreshToken(cookieRefreshToken), roles);
         }
         throw new RefreshTokenExpiredException("Validation failed, please login again.");
     }
@@ -97,5 +101,25 @@ public class JwtUtil {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    public List<String> getRolesFromAccessToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getAccessKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get("roles", List.class);
+    }
+
+    public List<String> getRolesFromRefreshToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getRefreshKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get("roles", List.class);
     }
 }

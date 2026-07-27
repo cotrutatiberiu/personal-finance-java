@@ -39,7 +39,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        Role moderatorRole = roleRepository.findByName("MODERATOR").orElseThrow(() -> new RuntimeException("Role not found"));
+        Role moderatorRole = roleRepository.findByName(RoleType.MODERATOR).orElseThrow(() -> new RuntimeException("Role not found"));
         Currency currency = currencyRepository.findByNameIgnoreCase("EUR").orElseThrow(() -> new RuntimeException("Currency not found"));
 
         String firstName = "moderatorFirstname";
@@ -53,8 +53,8 @@ public class DataInitializer implements CommandLineRunner {
         Optional<User> u = userRepository.findByEmail(email);
 
         if (u.isEmpty()) {
-            User user = new User(firstName, lastName, email);
 
+            User user = new User(firstName, lastName, email);
             User savedUser = userService.create(user, password);
             System.out.println("User initialized.");
 

@@ -21,7 +21,6 @@ import java.util.List;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailsServiceImpl customUserDetailsServiceImpl;
-    private final HandlerExceptionResolver resolver;
     private final JwtUtil jwtUtil;
 
     private static final List<String> EXCLUDED_PATHS = List.of(
@@ -33,7 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public JwtAuthenticationFilter(CustomUserDetailsServiceImpl customUserDetailsServiceImpl, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver, JwtUtil jwtUtil) {
         this.customUserDetailsServiceImpl = customUserDetailsServiceImpl;
-        this.resolver = resolver;
         this.jwtUtil = jwtUtil;
     }
 

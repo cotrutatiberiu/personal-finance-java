@@ -36,26 +36,21 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody UserLoginRequest request, HttpServletResponse response) {
-        String loggedEmail = authService.login(request);
+        LoginResult loginResult = authService.login(request.email(), request.password());
 
-        String accessToken = jwtUtil.generateAccessToken(loggedEmail);
-        String refreshToken = jwtUtil.generateRefreshToken(loggedEmail);
-
-        Cookie refreshTokenCookie = new Cookie("rt", refreshToken);
+        Cookie refreshTokenCookie = new Cookie("rt", loginResult.refreshToken());
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setPath("/api/auth");
         refreshTokenCookie.setMaxAge((int) (jwtUtil.getDefaultRefreshTokenExpirationSeconds()));
 
         response.addCookie(refreshTokenCookie);
 
-        return ResponseEntity.ok(new LoginResponse(accessToken));
+        return ResponseEntity.ok(new LoginResponse(loginResult.accessToken()));
     }
 
     @PostMapping("/refresh-token")
     public ResponseEntity<Object> resetAccessToken(@CookieValue(value = "rt", required = false) String cookieRefreshToken) {
-
-        String newAccessToken = jwtUtil.refreshAccessToken(cookieRefreshToken);
-        return ResponseEntity.ok(new RefreshAccessTokenResponse(newAccessToken));
+        return ResponseEntity.ok(authService.refreshAccessToken(cookieRefreshToken));
     }
 
     @GetMapping("/authenticated")
