@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
         String encodedPassword = passwordEncoder.encode(password);
         user.setPassword(encodedPassword);
-        user.setEmail(normalizedEmail);
+        user.setEmail(normalizedEmail)git s;
 
         User savedUser = userRepository.save(user);
 
