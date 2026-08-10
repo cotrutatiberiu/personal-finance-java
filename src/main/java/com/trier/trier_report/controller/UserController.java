@@ -6,6 +6,7 @@ import com.trier.trier_report.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/accounts/search")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PaginatedResponse<AccountResponse>> getUserAccounts(@PathVariable Long userId, @Valid @RequestBody UserAccountsSearchRequest request) {
         return ResponseEntity.ok(accountService.findAccountsByUserId(userId, request));
     }

@@ -19,7 +19,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     public List<String> getRoles(Long userId) {
         List<UserRole> userRoles = userRoleRepository.findAllByUserId(userId);
-        return userRoles.stream().map(userRole -> userRole.getRole().getName().name()
+        return userRoles.stream().map(userRole -> userRole.getRole().getName()
         ).toList();
     }
 }

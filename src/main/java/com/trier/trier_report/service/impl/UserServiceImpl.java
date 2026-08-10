@@ -4,7 +4,6 @@ import com.trier.trier_report.dao.RoleRepository;
 import com.trier.trier_report.dao.UserRepository;
 import com.trier.trier_report.dao.UserRoleRepository;
 import com.trier.trier_report.entity.Role;
-import com.trier.trier_report.entity.RoleType;
 import com.trier.trier_report.entity.User;
 import com.trier.trier_report.entity.UserRole;
 import com.trier.trier_report.exception.EmailUsedException;
@@ -43,11 +42,11 @@ public class UserServiceImpl implements UserService {
 
         String encodedPassword = passwordEncoder.encode(password);
         user.setPassword(encodedPassword);
-        user.setEmail(normalizedEmail)git s;
+        user.setEmail(normalizedEmail);
 
         User savedUser = userRepository.save(user);
 
-        Role role = roleRepository.findByName(RoleType.USER).orElseThrow(() -> new EntityNotFoundException("Role not found"));
+        Role role = roleRepository.findByName("USER").orElseThrow(() -> new EntityNotFoundException("Role not found"));
 
         userRoleRepository.save(new UserRole(savedUser, role));
 

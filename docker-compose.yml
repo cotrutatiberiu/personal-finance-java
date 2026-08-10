@@ -1,28 +1,28 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    ports:
-      - "8080:8080"
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    volumes:
-      - .:/app
-      - m2_cache:/root/.m2
-    working_dir: /app
-    env_file:
-      - .env
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_APPLICATION_NAME: ${SPRING_APPLICATION_NAME}
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.dev
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#      redis:
+#        condition: service_healthy
+#    volumes:
+#      - .:/app
+#      - m2_cache:/root/.m2
+#    working_dir: /app
+#    env_file:
+#      - .env
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+#      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+#      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+#      SPRING_APPLICATION_NAME: ${SPRING_APPLICATION_NAME}
+#      SPRING_REDIS_HOST: redis
+#      SPRING_REDIS_PORT: 6379
 
   db:
     image: postgres:15

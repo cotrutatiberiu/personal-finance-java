@@ -10,14 +10,13 @@ public class Role {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false)
-    private RoleType name;
+    private String name;
 
     protected Role() {
     }
 
-    public Role(RoleType name) {
+    public Role(String name) {
         this.name = name;
     }
 
@@ -29,11 +28,11 @@ public class Role {
         this.id = id;
     }
 
-    public RoleType getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(RoleType name) {
+    public void setName(String name) {
         this.name = name;
     }
 

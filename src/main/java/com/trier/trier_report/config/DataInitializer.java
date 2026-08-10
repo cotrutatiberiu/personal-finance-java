@@ -23,9 +23,7 @@ public class DataInitializer implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository, UserService userService,
-                           PasswordEncoder encoder, AccountTypeRepository accountTypeRepository,
-                           CurrencyRepository currencyRepository, AccountRepository accountRepository, CategoryRepository categoryRepository, UserRoleRepository userRoleRepository) {
+    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository, UserService userService, AccountTypeRepository accountTypeRepository, CurrencyRepository currencyRepository, AccountRepository accountRepository, CategoryRepository categoryRepository, UserRoleRepository userRoleRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.userService = userService;
@@ -39,7 +37,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        Role moderatorRole = roleRepository.findByName(RoleType.MODERATOR).orElseThrow(() -> new RuntimeException("Role not found"));
+        Role moderatorRole = roleRepository.findByName("MODERATOR").orElseThrow(() -> new RuntimeException("Role not found"));
         Currency currency = currencyRepository.findByNameIgnoreCase("EUR").orElseThrow(() -> new RuntimeException("Currency not found"));
 
         String firstName = "moderatorFirstname";
@@ -52,29 +50,28 @@ public class DataInitializer implements CommandLineRunner {
 
         Optional<User> u = userRepository.findByEmail(email);
 
-        if (u.isEmpty()) {
-
-            User user = new User(firstName, lastName, email);
-            User savedUser = userService.create(user, password);
-            System.out.println("User initialized.");
-
-            AccountType accountType = accountTypeRepository.findByName(accountName)
-                    .orElseThrow(() -> new RuntimeException("Account type not found"));
-
-            Account account = new Account(savedUser.getId(), accountType.getId(), currency.getId(), "First account");
-            accountRepository.save(account);
-            System.out.println("Account initialized.");
-
-            Category parentCategory = new Category(savedUser.getId(), null, parentCategoryName);
-            categoryRepository.save(parentCategory);
-
-            Category savedParentCategory = categoryRepository.findByUserId(savedUser.getId()).orElseThrow(() -> new RuntimeException("Category not found"));
-
-            Category subCategory = new Category(savedUser.getId(), savedParentCategory.getId(), subCategoryName);
-            categoryRepository.save(subCategory);
-
-            UserRole userRole = new UserRole(savedUser, moderatorRole);
-            userRoleRepository.save(userRole);
-        }
+//        if (u.isEmpty()) {
+//
+//            User user = new User(firstName, lastName, email);
+//            User savedUser = userService.create(user, password);
+//            System.out.println("User initialized.");
+//
+//            AccountType accountType = accountTypeRepository.findByName(accountName).orElseThrow(() -> new RuntimeException("Account type not found"));
+//
+//            Account account = new Account(savedUser.getId(), accountType.getId(), currency.getId(), "First account");
+//            accountRepository.save(account);
+//            System.out.println("Account initialized.");
+//
+//            Category parentCategory = new Category(savedUser.getId(), null, parentCategoryName);
+//            categoryRepository.save(parentCategory);
+//
+//            Category savedParentCategory = categoryRepository.findByUserId(savedUser.getId()).orElseThrow(() -> new RuntimeException("Category not found"));
+//
+//            Category subCategory = new Category(savedUser.getId(), savedParentCategory.getId(), subCategoryName);
+//            categoryRepository.save(subCategory);
+//
+//            UserRole userRole = new UserRole(savedUser, moderatorRole);
+//            userRoleRepository.save(userRole);
+//        }
     }
 }
