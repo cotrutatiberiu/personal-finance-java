@@ -3,6 +3,7 @@ package com.trier.trier_report.config;
 import com.trier.trier_report.dao.*;
 import com.trier.trier_report.entity.*;
 import com.trier.trier_report.service.UserService;
+import com.trier.trier_report.util.StringUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.DependsOn;
@@ -48,30 +49,30 @@ public class DataInitializer implements CommandLineRunner {
         String subCategoryName = "restaurants";
         String accountName = "BANK";
 
-        Optional<User> u = userRepository.findByEmail(email);
+        Optional<User> u = userRepository.findByEmail(StringUtil.normalizeEmail(email));
 
-//        if (u.isEmpty()) {
-//
-//            User user = new User(firstName, lastName, email);
-//            User savedUser = userService.create(user, password);
-//            System.out.println("User initialized.");
-//
-//            AccountType accountType = accountTypeRepository.findByName(accountName).orElseThrow(() -> new RuntimeException("Account type not found"));
-//
-//            Account account = new Account(savedUser.getId(), accountType.getId(), currency.getId(), "First account");
-//            accountRepository.save(account);
-//            System.out.println("Account initialized.");
-//
-//            Category parentCategory = new Category(savedUser.getId(), null, parentCategoryName);
-//            categoryRepository.save(parentCategory);
-//
-//            Category savedParentCategory = categoryRepository.findByUserId(savedUser.getId()).orElseThrow(() -> new RuntimeException("Category not found"));
-//
-//            Category subCategory = new Category(savedUser.getId(), savedParentCategory.getId(), subCategoryName);
-//            categoryRepository.save(subCategory);
-//
-//            UserRole userRole = new UserRole(savedUser, moderatorRole);
-//            userRoleRepository.save(userRole);
-//        }
+        if (u.isEmpty()) {
+
+            User user = new User(firstName, lastName, email);
+            User savedUser = userService.create(user, password);
+            System.out.println("User initialized.");
+
+            AccountType accountType = accountTypeRepository.findByName(accountName).orElseThrow(() -> new RuntimeException("Account type not found"));
+
+            Account account = new Account(savedUser.getId(), accountType.getId(), currency.getId(), "First account");
+            accountRepository.save(account);
+            System.out.println("Account initialized.");
+
+            Category parentCategory = new Category(savedUser.getId(), null, parentCategoryName);
+            categoryRepository.save(parentCategory);
+
+            Category savedParentCategory = categoryRepository.findByUserId(savedUser.getId()).orElseThrow(() -> new RuntimeException("Category not found"));
+
+            Category subCategory = new Category(savedUser.getId(), savedParentCategory.getId(), subCategoryName);
+            categoryRepository.save(subCategory);
+
+            UserRole userRole = new UserRole(savedUser, moderatorRole);
+            userRoleRepository.save(userRole);
+        }
     }
 }

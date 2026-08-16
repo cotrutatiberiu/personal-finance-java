@@ -9,12 +9,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.Instant;
 
 @Entity
-@Table(name="categories",schema = "tr")
+@Table(name="categories")
 @EntityListeners(AuditingEntityListener.class)
 public class Category implements Ownable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Column(name = "user_id", nullable = false)

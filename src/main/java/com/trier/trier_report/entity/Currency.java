@@ -3,7 +3,7 @@ package com.trier.trier_report.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "currencies", schema = "tr")
+@Table(name = "currencies")
 public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

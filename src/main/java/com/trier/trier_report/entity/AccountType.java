@@ -3,11 +3,11 @@ package com.trier.trier_report.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "account_types", schema = "tr")
+@Table(name = "account_types")
 public class AccountType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Column(name = "name", nullable = false)

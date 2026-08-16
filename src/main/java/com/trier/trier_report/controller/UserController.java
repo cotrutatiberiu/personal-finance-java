@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/accounts/search")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PaginatedResponse<AccountResponse>> getUserAccounts(@PathVariable Long userId, @Valid @RequestBody UserAccountsSearchRequest request) {
         return ResponseEntity.ok(accountService.findAccountsByUserId(userId, request));
     }
